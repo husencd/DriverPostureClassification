@@ -25,7 +25,7 @@ def test(data_loader, model, args, device):
 
         # measure accuracy and record loss
         prec1, prec3 = calculate_accuracy(output, target, topk=(1, 3))
-        # Attention: prec1[0], convert torch.Size([1]) to torch.Size([])
+        # prec1[0]: convert torch.Size([1]) to torch.Size([])
         top1.update(prec1[0].item(), input.size(0))
         top3.update(prec3[0].item(), input.size(0))
 
