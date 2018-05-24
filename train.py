@@ -6,7 +6,7 @@ from utils import AverageMeter, calculate_accuracy
 
 
 def train_epoch(epoch, data_loader, model, criterion, optimizer, args, device,
-                epoch_logger, batch_logger):
+                epoch_logger, batch_logger, vis):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()
@@ -109,7 +109,7 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, args, device,
         accu=top1.avg))
 
 
-def val_epoch(epoch, data_loader, model, criterion, args, device, epoch_logger):
+def val_epoch(epoch, data_loader, model, criterion, args, device, epoch_logger, vis):
     batch_time = AverageMeter()
     data_time = AverageMeter()
     losses = AverageMeter()

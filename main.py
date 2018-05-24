@@ -117,8 +117,8 @@ def main():
                 torch.save(state, save_file_path)
 
         if args.train and args.val:
-            scheduler.step(val_loss)
-            # adjust_learning_rate(optimizer, epoch)
+            # scheduler.step(val_loss)
+            adjust_learning_rate(optimizer, epoch)
 
     if args.test:
         test_dataset = Driver(root=args.data_path, train=False, test=True)
