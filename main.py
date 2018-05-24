@@ -81,7 +81,7 @@ def main():
             os.path.join(args.result_path, 'train_batch.log'),
             ['epoch', 'batch', 'iter', 'loss', 'top1', 'top3', 'lr'])
     if args.val:
-        val_dataset = Driver(root=args.data_path, train=False, test=False)
+        val_dataset = Driver(root=args.data_path, train=False, test=True)
         val_loader = DataLoader(
             dataset=val_dataset,
             batch_size=args.test_batch_size,
