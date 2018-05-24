@@ -3,9 +3,6 @@ import time
 import os
 
 from utils import AverageMeter, calculate_accuracy
-from tools import Visualizer
-
-vis = Visualizer()
 
 
 def train_epoch(epoch, data_loader, model, criterion, optimizer, args, device,
