@@ -1,8 +1,6 @@
 import torch
 import torch.nn as nn
-# import torch.nn.functional as F
 import torch.optim as optim
-# from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
 import os
@@ -56,7 +54,7 @@ def main():
         momentum=args.momentum,
         weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.1, threshold=1e-3, patience=args.lr_patience)
+        optimizer, mode='min', factor=0.1, threshold=0.01, patience=args.lr_patience)
 
     # optionally resume from a checkpoint
     if args.resume_path:
@@ -64,7 +62,6 @@ def main():
             print("=> loading checkpoint '{}'...".format(args.resume_path))
             checkpoint = torch.load(args.resume_path)
             args.begin_epoch = checkpoint['epoch'] + 1
-            # best_prec1 = checkpoint['best_prec1']
             model.load_state_dict(checkpoint['state_dict'])
             optimizer.load_state_dict(checkpoint['optimizer'])
         else:
@@ -131,7 +128,7 @@ def main():
             shuffle=False,
             num_workers=args.num_workers)
         # # if you only test the model, you need to set the "best_epoch" manually
-        # best_epoch = 92  # set manually
+        # best_epoch = 10  # set manually
         saved_model_path = os.path.join(args.result_path, 'save_best_{}_{}.pth'.format(args.arch, best_epoch))
         print("Using '{}' for test...".format(saved_model_path))
         checkpoint = torch.load(saved_model_path)
