@@ -4,7 +4,7 @@ This is a PyTorch code for **Driver Posture Classification** task. We use the [A
 <p align='center'>
 <img src='https://devyhia.github.io/images/projects/auc-distracted-driver-dataset/AUC-Dataset.png' title='3D-FAN-Full example' style='max-width:600px'></img>
 </p>
-The task is to classify an image to these pre_defined categories, namely *"Drive Safe"*, *"Talk Passenger"*, *"Text Right"*, *"Drink"*, and etc. We use a pretrained resnet34 model to achieve comparable performance of the orignal paper [Real-time Distracted Driver Posture Classification](https://arxiv.org/abs/1706.09498). The classification accuracy is about 97%.
+The task is to classify an image to one of these pre-defined categories, namely "Drive Safe", "Talk Passenger", "Text Right", "Drink", and etc. We use a pretrained resnet34 model to achieve comparable performance of the orignal paper [Real-time Distracted Driver Posture Classification](https://arxiv.org/abs/1706.09498). The classification accuracy is about 97%.
 
 ## Usage
 ### Requirements
