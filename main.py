@@ -54,7 +54,7 @@ def main():
         momentum=args.momentum,
         weight_decay=args.weight_decay)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.1, threshold=0.01, patience=args.lr_patience)
+        optimizer, mode='min', factor=0.1, threshold=0.001, patience=args.lr_patience)
 
     # optionally resume from a checkpoint
     if args.resume_path:
