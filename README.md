@@ -22,18 +22,18 @@ The task is to classify an image to one of these pre-defined categories, namely 
 0. Download the dataset and its training and testing splits (train.csv and test.csv). Put them in a directory together.
 1. Clone the repository
 
-	`git clone https://github.com/husencd/DriverPostureClassification.git`
-	`cd DriverPostureClassification`
+	`git clone https://github.com/husencd/DriverPostureClassification.git
+	cd DriverPostureClassification`
 
 2. Download the resnet model pretrained on ImageNet from [pytorch official model urls](https://download.pytorch.org/models/).
 
-	`cd pretrained_models`
-	`sh download.sh`
+	`cd pretrained_models
+	sh download.sh`
 
 3. Now you can train/fine-tune the model
 
-	`cd ..`
-	`python main.py [--model resnet] [--model_depth 34]`
+	`cd ..
+	python main.py [--model resnet] [--model_depth 34]`
 	
    If you want to monitor the training process, use visdom
    
