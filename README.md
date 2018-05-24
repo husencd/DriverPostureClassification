@@ -34,6 +34,7 @@ The task is to classify an image to one of these pre-defined categories, namely 
 
 	`cd ..`
 	`python main.py [--model resnet] [--model_depth 34]`
+	
    If you want to monitor the training process, use visdom
    
 	`python -m visdom.server`
