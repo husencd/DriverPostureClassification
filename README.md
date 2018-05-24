@@ -27,13 +27,15 @@ The task is to classify an image to one of these pre-defined categories, namely 
 
 2. Download the resnet model pretrained on ImageNet from [pytorch official model urls](https://download.pytorch.org/models/).
 
-	`cd pretrained_models
-	sh download.sh`
+	`cd pretrained_models｀
+	
+	`sh download.sh`
 
 3. Now you can train/fine-tune the model
 
-	`cd ..
-	python main.py [--model resnet] [--model_depth 34]`
+	`cd ..`
+	
+	`python main.py [--model resnet] [--model_depth 34]`
 	
    If you want to monitor the training process, use visdom
    
