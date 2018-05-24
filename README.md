@@ -28,7 +28,7 @@ The task is to classify an image to one of these pre-defined categories, namely 
 
 2. Download the resnet model pretrained on ImageNet from [pytorch official model urls](https://download.pytorch.org/models/).
 
-	`cd pretrained_models｀
+	`cd pretrained_models`
 	
 	`sh download.sh`
 
