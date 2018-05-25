@@ -125,6 +125,18 @@ class ResNet(nn.Module):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
 
+        # for m in self.modules():
+        #     if isinstance(m, nn.Conv2d):
+        #         nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+        #         if m.bias is not None:
+        #             nn.init.constant_(m.bias, 0)
+        #     elif isinstance(m, nn.BatchNorm2d):
+        #         nn.init.constant_(m.weight, 1)
+        #         nn.init.constant_(m.bias, 0)
+        #     elif isinstance(m, nn.Linear):
+        #         nn.init.normal_(m.weight, 0, 0.01)
+        #         nn.init.constant_(m.bias, 0)
+
     def _make_layer(self, block, planes, num_blocks, stride=1):
         downsample = None
         if stride != 1 or self.in_planes != planes * block.expansion:
@@ -230,18 +242,15 @@ def get_fine_tuning_parameters(model, ft_begin_index=0):
     ft_module_names.append('fc')
 
     parameters = []
-    for k, v in model.named_parameters():
-        count = 0
+    for name, params in model.named_parameters():
+        flag = False
         for ft_module in ft_module_names:
-            if ft_module in k:
-                parameters.append({'params': v})
+            if ft_module in name:
+                flag = True
+                parameters.append({'params': params})
                 break
-            else:
-                count += 1
-                if count < len(ft_module_names):
-                    continue
-                else:
-                    parameters.append({'params': v, 'lr': 0.0})
+        if not flag:
+            parameters.append({'params': params, 'lr': 0.0})
 
     return parameters
 
@@ -254,15 +263,3 @@ if __name__ == '__main__':
     model = model.to(device)
     y = model(x)
     print(torch.nn.functional.softmax(y, dim=1))
-
-    # params = get_fine_tuning_parameters(model, 2)
-    # for idx, param in enumerate(params):
-    #     for k, v in param.items():
-    #         if k == 'lr':
-    #             print(idx, k, v)
-    #         elif k == 'params':
-    #             print(idx, k, v.size())
-
-    # params = get_fine_tuning_parameters(model, 0)  # generator
-    # for idx, param in enumerate(params):
-    #     print(idx, param.size())
