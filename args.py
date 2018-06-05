@@ -27,12 +27,16 @@ def parse_args():
     # about model configuration
     parser.add_argument('--model', default='resnet', type=str,
                         help='(vgg | resnet | resnext | densenet)')
-    parser.add_argument('--model_depth', default=34, type=int,
+    parser.add_argument('--model_depth', default=18, type=int,
                         help='Depth of resnet (10 | 18 | 34 | 50 | 101 | 152)')
 
     # about optimizer
     parser.add_argument('--lr', default=0.001, type=float,
                         help='Initial learning rate (divided by 10 while training by lr scheduler)')
+    parser.add_argument('--lr_mult1', default=0.1, type=float,
+                        help='Multiplication factor of learning rate in those pre-trained layers')
+    parser.add_argument('--lr_mult2', default=1, type=float,
+                        help='Multiplication factor of learning rate in those newly-created layers')
     parser.add_argument('--lr_patience', default=10, type=int,
                         help='Patience of LR scheduler. See documentation of ReduceLROnPlateau.')
     parser.add_argument('--momentum', default=0.9, type=float,

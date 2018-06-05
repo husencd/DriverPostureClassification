@@ -53,8 +53,11 @@ def main():
         lr=args.lr,
         momentum=args.momentum,
         weight_decay=args.weight_decay)
-    scheduler = optim.lr_scheduler.ReduceLROnPlateau(
-        optimizer, mode='min', factor=0.1, threshold=0.001, patience=args.lr_patience)
+    scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, threshold=0.001, patience=args.lr_patience)
+
+    lr_mult = []
+    for param_group in optimizer.param_groups:
+        lr_mult.append(param_group['lr'])
 
     # optionally resume from a checkpoint
     if args.resume_path:
@@ -95,6 +98,7 @@ def main():
     vis = Visualizer(env=args.env)
     for epoch in range(args.begin_epoch, args.epochs + 1):
         if args.train:
+            adjust_learning_rate(optimizer, epoch, lr_mult)
             train_epoch(epoch, train_loader, model, criterion, optimizer, args, device, train_logger, train_batch_logger, vis)
             print()
 
@@ -116,9 +120,8 @@ def main():
                 }
                 torch.save(state, save_file_path)
 
-        if args.train and args.val:
+        # if args.train and args.val:
             # scheduler.step(val_loss)
-            adjust_learning_rate(optimizer, epoch)
 
     if args.test:
         test_dataset = Driver(root=args.data_path, train=False, test=True)
@@ -136,11 +139,11 @@ def main():
         test.test(test_loader, model, args, device)
 
 
-def adjust_learning_rate(optimizer, epoch):
+def adjust_learning_rate(optimizer, epoch, lr_mult):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr * (0.1**(epoch // 30))
-    for param_group in optimizer.param_groups:
-        param_group['lr'] = lr
+    lr = args.lr * (0.1**((epoch - 1) // 30))
+    for i, param_group in enumerate(optimizer.param_groups):
+        param_group['lr'] = lr * lr_mult[i]
 
 
 if __name__ == '__main__':

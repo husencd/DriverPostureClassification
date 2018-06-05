@@ -49,7 +49,7 @@ def get_model_param(args):
         # elif args.model == 'vgg':
         #     pass
 
-        parameters = get_fine_tuning_parameters(model, args.ft_begin_index)
+        parameters = get_fine_tuning_parameters(model, args.ft_begin_index, args.lr_mult1, args.lr_mult2)
         return model, parameters
 
     return model, model.parameters()
