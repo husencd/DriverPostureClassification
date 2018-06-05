@@ -232,7 +232,7 @@ def resnet152(pretrained=False, **kwargs):
     return model
 
 
-def get_fine_tuning_parameters(model, ft_begin_index=0):
+def get_fine_tuning_parameters(model, ft_begin_index=0, lr_mult1=0.1, lr_mult2=1):
     if ft_begin_index == 0:
         return model.parameters()
 
@@ -247,10 +247,10 @@ def get_fine_tuning_parameters(model, ft_begin_index=0):
         for ft_module in ft_module_names:
             if ft_module in name:
                 flag = True
-                parameters.append({'params': params})
+                parameters.append({'params': params, 'lr': lr_mult1})
                 break
         if not flag:
-            parameters.append({'params': params, 'lr': 0.0})
+            parameters.append({'params': params, 'lr': lr_mult2})
 
     return parameters
 
