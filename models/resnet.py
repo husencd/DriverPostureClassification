@@ -263,23 +263,3 @@ if __name__ == '__main__':
     model = model.to(device)
     y = model(x)
     print(torch.nn.functional.softmax(y, dim=1))
-
-    # parameters1 = get_fine_tuning_parameters(model, 0)
-    # parameters2 = list(parameters1)
-    # parameters3 = get_fine_tuning_parameters(model, 1)
-    # print(type(parameters1))
-    # print(type(parameters3))
-    # print(len(parameters2))
-    # print(len(parameters3))
-
-    # print(type(parameters2[0]))
-    # print(type(parameters3[0]['params']))
-
-    """
-    <class 'generator'>
-    <class 'list'>
-    62
-    62
-    <class 'torch.nn.parameter.Parameter'>
-    <class 'torch.nn.parameter.Parameter'>
-    """

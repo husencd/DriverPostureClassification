@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader
 
 import os
 import json
+
 from args import parse_args
 from model import get_model_param
 from data import Driver
@@ -36,6 +37,7 @@ def main():
     torch.manual_seed(args.manual_seed)
 
     args.use_cuda = args.use_cuda and torch.cuda.is_available()
+
     device = torch.device("cuda" if args.use_cuda else "cpu")
 
     # create model
@@ -48,11 +50,7 @@ def main():
 
     # define loss function (criterion) and optimizer
     criterion = nn.CrossEntropyLoss().to(device)
-    optimizer = optim.SGD(
-        parameters,
-        lr=args.lr,
-        momentum=args.momentum,
-        weight_decay=args.weight_decay)
+    optimizer = optim.SGD(parameters, lr=args.lr, momentum=args.momentum, weight_decay=args.weight_decay)
     # scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.1, threshold=0.001, patience=args.lr_patience)
 
     lr_mult = []
@@ -83,6 +81,7 @@ def main():
         train_batch_logger = Logger(
             os.path.join(args.result_path, 'train_batch.log'),
             ['epoch', 'batch', 'iter', 'loss', 'top1', 'top3', 'lr'])
+
     if args.val:
         val_dataset = Driver(root=args.data_path, train=False, test=True)
         val_loader = DataLoader(
@@ -100,25 +99,25 @@ def main():
         if args.train:
             adjust_learning_rate(optimizer, epoch, lr_mult, args)
             train_epoch(epoch, train_loader, model, criterion, optimizer, args, device, train_logger, train_batch_logger, vis)
-            print()
+            print('\n')
 
         if args.val:
             val_loss, val_prec1 = val_epoch(epoch, val_loader, model, criterion, args, device, val_logger, vis)
-            print()
+            print('\n')
             # remember best prec@1 and save checkpoint
             if val_prec1 > best_prec1:
                 best_prec1 = val_prec1
                 best_epoch = epoch
                 print('=> Saving current best model...\n')
                 save_file_path = os.path.join(args.result_path, 'save_best_{}_{}.pth'.format(args.arch, epoch))
-                state = {
-                    'epoch': best_epoch,
+                checkpoint = {
                     'arch': args.arch,
+                    'epoch': best_epoch,
                     'best_prec1': best_prec1,
-                    'state_dict': model.state_dict(),
-                    'optimizer': optimizer.state_dict(),
+                    'model': model.state_dict(),
+                    'optimizer': optimizer.state_dict()
                 }
-                torch.save(state, save_file_path)
+                torch.save(checkpoint, save_file_path)
 
         # if args.train and args.val:
             # scheduler.step(val_loss)
@@ -135,7 +134,7 @@ def main():
         saved_model_path = os.path.join(args.result_path, 'save_best_{}_{}.pth'.format(args.arch, best_epoch))
         print("Using '{}' for test...".format(saved_model_path))
         checkpoint = torch.load(saved_model_path)
-        model.load_state_dict(checkpoint['state_dict'])
+        model.load_state_dict(checkpoint['model'])
         test.test(test_loader, model, args, device)
 
 
