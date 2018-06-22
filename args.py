@@ -24,10 +24,20 @@ def parse_args():
     parser.add_argument('--n_finetune_classes', default=10, type=int,
                         help='Number of classes for fine-tuning, n_classes is set to the number when pre-training')
 
+    # batch size and epoch
+    parser.add_argument('--batch_size', default=64, type=int,
+                        help='Batch Size')
+    parser.add_argument('--test_batch_size', default=64, type=int,
+                        help='Test batch Size')
+    parser.add_argument('--epochs', default=50, type=int,
+                        help='Number of total epochs to run')
+    parser.add_argument('--begin_epoch', default=1, type=int,
+                        help='Training begins at this epoch. Previous trained model indicated by resume_path is loaded.')
+
     # about model configuration
     parser.add_argument('--model', default='resnet', type=str,
                         help='(vgg | resnet | resnext | densenet)')
-    parser.add_argument('--model_depth', default=18, type=int,
+    parser.add_argument('--model_depth', default=34, type=int,
                         help='Depth of resnet (10 | 18 | 34 | 50 | 101 | 152)')
 
     # about optimizer
@@ -41,7 +51,7 @@ def parse_args():
                         help='Patience of LR scheduler. See documentation of ReduceLROnPlateau.')
     parser.add_argument('--momentum', default=0.9, type=float,
                         help='Momentum')
-    parser.add_argument('--weight_decay', default=1e-4, type=float,
+    parser.add_argument('--weight_decay', default=5e-4, type=float,
                         help='Weight decay')
 
     # train, val, test, fine-tune
@@ -52,19 +62,9 @@ def parse_args():
     parser.add_argument('--test', action='store_true', default=True,
                         help='If true, test is performed.')
     parser.add_argument('--finetune', action='store_true', default=True,
-                        help='If True, fine-tune on a model that has been pretrained on ImageNet')
+                        help='If True, fine-tune on a model that has been pre-trained on ImageNet')
     parser.add_argument('--ft_begin_index', default=0, type=int,
                         help='Begin block index of fine-tuning')
-
-    # batch size and epoch
-    parser.add_argument('--batch_size', default=64, type=int,
-                        help='Batch Size')
-    parser.add_argument('--test_batch_size', default=64, type=int,
-                        help='Test batch Size')
-    parser.add_argument('--epochs', default=100, type=int,
-                        help='Number of total epochs to run')
-    parser.add_argument('--begin_epoch', default=1, type=int,
-                        help='Training begins at this epoch. Previous trained model indicated by resume_path is loaded.')
 
     # training log and checkpoint
     parser.add_argument('--log_interval', default=10, type=int,

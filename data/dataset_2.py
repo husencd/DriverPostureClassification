@@ -32,6 +32,7 @@ class Driver(Dataset):
 
             num_train = int(0.7 * len(dataset))
             import random
+            random.seed(1)
             for _ in range(10):
                 dataset = random.sample(dataset, len(dataset))
             if self.train:
@@ -80,7 +81,7 @@ class Driver(Dataset):
 
 if __name__ == '__main__':
     driver = Driver('/home/husencd/Downloads/dataset/driver', train=True)
-    print(driver.__getitem__(1))  # random shuffle
+    print(driver.__getitem__(1))
     print(driver.__len__())  # 9083
     driver = Driver('/home/husencd/Downloads/dataset/driver', train=False, test=False)
     print(driver.__len__())  # 3894

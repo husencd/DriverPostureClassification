@@ -71,8 +71,8 @@ class Bottleneck(nn.Module):
         self.bn1 = nn.BatchNorm2d(planes)
         self.conv2 = conv3x3(planes, planes, stride=stride)
         self.bn2 = nn.BatchNorm2d(planes)
-        self.conv3 = nn.Conv2d(planes, planes * 4, kernel_size=1, bias=False)
-        self.bn3 = nn.BatchNorm2d(planes * 4)
+        self.conv3 = nn.Conv2d(planes, planes * self.expansion, kernel_size=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(planes * self.expansion)
         self.relu = nn.ReLU(inplace=True)
         self.downsample = downsample
         self.stride = stride
@@ -117,25 +117,25 @@ class ResNet(nn.Module):
         self.avgpool = nn.AvgPool2d(int(math.ceil(input_size / 32)), stride=1)
         self.fc = nn.Linear(512 * block.expansion, num_classes)
 
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2. / n))
-            elif isinstance(m, nn.BatchNorm2d):
-                m.weight.data.fill_(1)
-                m.bias.data.zero_()
-
         # for m in self.modules():
         #     if isinstance(m, nn.Conv2d):
-        #         nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
-        #         if m.bias is not None:
-        #             nn.init.constant_(m.bias, 0)
+        #         n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+        #         m.weight.data.normal_(0, math.sqrt(2. / n))
         #     elif isinstance(m, nn.BatchNorm2d):
-        #         nn.init.constant_(m.weight, 1)
-        #         nn.init.constant_(m.bias, 0)
-        #     elif isinstance(m, nn.Linear):
-        #         nn.init.normal_(m.weight, 0, 0.01)
-        #         nn.init.constant_(m.bias, 0)
+        #         m.weight.data.fill_(1)
+        #         m.bias.data.zero_()
+
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity='relu')
+                if m.bias is not None:
+                    nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.constant_(m.weight, 1)
+                nn.init.constant_(m.bias, 0)
+            elif isinstance(m, nn.Linear):
+                nn.init.normal_(m.weight, 0, 0.01)
+                nn.init.constant_(m.bias, 0)
 
     def _make_layer(self, block, planes, num_blocks, stride=1):
         downsample = None
@@ -247,10 +247,10 @@ def get_fine_tuning_parameters(model, ft_begin_index=0, lr_mult1=0.1, lr_mult2=1
         for ft_module in ft_module_names:
             if ft_module in name:
                 flag = True
-                parameters.append({'params': params, 'lr': lr_mult1})
+                parameters.append({'params': params, 'lr': lr_mult2})
                 break
         if not flag:
-            parameters.append({'params': params, 'lr': lr_mult2})
+            parameters.append({'params': params, 'lr': lr_mult1})
 
     return parameters
 
@@ -263,3 +263,23 @@ if __name__ == '__main__':
     model = model.to(device)
     y = model(x)
     print(torch.nn.functional.softmax(y, dim=1))
+
+    # parameters1 = get_fine_tuning_parameters(model, 0)
+    # parameters2 = list(parameters1)
+    # parameters3 = get_fine_tuning_parameters(model, 1)
+    # print(type(parameters1))
+    # print(type(parameters3))
+    # print(len(parameters2))
+    # print(len(parameters3))
+
+    # print(type(parameters2[0]))
+    # print(type(parameters3[0]['params']))
+
+    """
+    <class 'generator'>
+    <class 'list'>
+    62
+    62
+    <class 'torch.nn.parameter.Parameter'>
+    <class 'torch.nn.parameter.Parameter'>
+    """

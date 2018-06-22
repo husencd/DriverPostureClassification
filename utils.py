@@ -25,7 +25,6 @@ class Logger(object):
     def __init__(self, path, header):
         self.log_file = open(path, 'w')
         self.logger = csv.writer(self.log_file, delimiter='\t')
-
         self.logger.writerow(header)
         self.header = header
 
@@ -50,14 +49,14 @@ def calculate_accuracy(output, target, topk=(1,)):
 
         _, pred = output.topk(maxk, dim=1, largest=True, sorted=True)  # batch_size x maxk
         pred = pred.t()  # transpose, maxk x batch_size
-        # target.view(1, -1): convert (batch_size,) to (1, batch_size)
-        # expand_as: convert (1, batch_size) to (maxk, batch_size)
+        # target.view(1, -1): convert (batch_size,) to 1 x batch_size
+        # expand_as: convert 1 x batch_size to maxk x batch_size
         correct = pred.eq(target.view(1, -1).expand_as(pred))  # maxk x batch_size
 
         res = []
         for k in topk:
             # correct[:k] converts "maxk x batch_size" to "k x batch_size"
-            # view(-1) converts "k x batch_size" to "(k x batch_size)"
+            # view(-1) converts "k x batch_size" to "(k x batch_size,)"
             correct_k = correct[:k].view(-1).float().sum(0, keepdim=True)
             res.append(correct_k.mul_(100.0 / batch_size))
         return res

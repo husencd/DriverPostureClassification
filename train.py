@@ -92,13 +92,13 @@ def train_epoch(epoch, data_loader, model, criterion, optimizer, args, device,
 
     if epoch % args.checkpoint_interval == 0:
         save_file_path = os.path.join(args.checkpoint_path, 'save_{}_{}.pth'.format(args.arch, epoch))
-        states = {
+        checkpoint = {
             'epoch': epoch,
             'arch': args.arch,
-            'state_dict': model.state_dict(),
+            'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),
         }
-        torch.save(states, save_file_path)
+        torch.save(checkpoint, save_file_path)
 
     vis.plot('Train loss', losses.avg)
     vis.plot('Train accu', top1.avg)

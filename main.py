@@ -65,7 +65,7 @@ def main():
             print("=> loading checkpoint '{}'...".format(args.resume_path))
             checkpoint = torch.load(args.resume_path)
             args.begin_epoch = checkpoint['epoch'] + 1
-            model.load_state_dict(checkpoint['state_dict'])
+            model.load_state_dict(checkpoint['model'])
             optimizer.load_state_dict(checkpoint['optimizer'])
         else:
             print("=> no checkpoint found at '{}'".format(args.resume_path))
@@ -141,7 +141,7 @@ def main():
 
 def adjust_learning_rate(optimizer, epoch, lr_mult, args):
     """Sets the learning rate to the initial LR decayed by 10 every 30 epochs"""
-    lr = args.lr * (0.1**((epoch - 1) // 30))
+    lr = args.lr * (0.1**((epoch - 1) // 20))
     for i, param_group in enumerate(optimizer.param_groups):
         if args.finetune and args.ft_begin_index:
             param_group['lr'] = lr * lr_mult[i]
